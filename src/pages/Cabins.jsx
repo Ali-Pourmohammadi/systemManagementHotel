@@ -4,7 +4,6 @@ import CabinTable from "../features/cabins/CabinTable";
 import CreateCabinForm from "../features/cabins/CreateCabinForm";
 import { useState } from "react";
 import Button from "../ui/Button";
-// import {CreateCabinForm} from "../features/cabins/CreateCabinForm";
 function Cabins() {
   const [showForm , hideForm] = useState(false);
   return (
