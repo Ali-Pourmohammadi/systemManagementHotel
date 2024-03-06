@@ -53,7 +53,7 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 export default function CabinRow({ cabin }) {
-  const [editRowId, setEditRowId] = useState(null);
+  const [editRow, setEditRow] = useState(false);
   const {
     id: cabinId,
     name,
@@ -62,29 +62,8 @@ export default function CabinRow({ cabin }) {
     discount,
     image,
   } = cabin;
-  // const queryClient = useQueryClient();
-  //   const { isLoading: isDeleting, mutate } = useMutation({
-  //     mutationFn: deleteCabin,
-  //     onSuccess: () => {
-  //       toast.success("Cabin deleted successfully");
-  //       queryClient.invalidateQueries({
-  //         queryKey: ["cabin"],
-  //       });
-  //     },
-  //     onError: () => {
-  //       toast.error("Can't delete cabin!");
-  //     },
-  //   });
-  const { deleteCabin, isDeleting } = useDeleteCabin();
 
-  const toggleEditForm = (rowId) => {
-    // Close any currently open row before opening the clicked row
-    if (editRowId === rowId) {
-      setEditRowId(null); // Close the currently open row if clicked again
-    } else {
-      setEditRowId(rowId); // Open the clicked row
-    }
-  };
+  const { deleteCabin, isDeleting } = useDeleteCabin();
 
   return (
     <>
@@ -95,15 +74,13 @@ export default function CabinRow({ cabin }) {
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{formatCurrency(discount)}</Discount>
         <ButtonContainer>
-          <Button onClick={() => toggleEditForm(cabinId)}>
-            {editRowId === cabinId ? "Close" : "Edit"}
-          </Button>
+          <Button onClick={()=>setEditRow(set=> !set)}> {editRow ? "Close" : "Edit"} </Button>
           <Button onClick={() => deleteCabin(cabinId)}>
             {isDeleting ? "Deleting..." : "Delete"}
           </Button>
         </ButtonContainer>
       </TableRow>
-      {editRowId === cabinId && <CreateCabinForm cabinToEdit={cabin} />}
+      {editRow &&<CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }
