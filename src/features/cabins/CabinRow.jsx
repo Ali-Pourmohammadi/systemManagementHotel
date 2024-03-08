@@ -9,6 +9,8 @@ import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
 import useDelete from "./DeleteCabin";
 import useDeleteCabin from "./DeleteCabin";
+import useCreateCabin from "./createCabin";
+import { FaCopy, FaPen, FaTrash } from "react-icons/fa6";
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -60,11 +62,22 @@ export default function CabinRow({ cabin }) {
     maxCapacity,
     regularPrice,
     discount,
+    description,
     image,
   } = cabin;
 
+  const { isCreating, createCabin } = useCreateCabin();
   const { deleteCabin, isDeleting } = useDeleteCabin();
-
+  function handleDuplicate() {
+    createCabin({
+      name: `copy of ${name}`,
+      maxCapacity,
+      regularPrice,
+      discount,
+      description,
+      image,
+    });
+  }
   return (
     <>
       <TableRow>
@@ -72,15 +85,28 @@ export default function CabinRow({ cabin }) {
         <Cabin>{name}</Cabin>
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>{formatCurrency(discount)}</Discount>
+        <Discount>{`${discount ? formatCurrency(discount) : `__`}`}</Discount>
         <ButtonContainer>
-          <Button onClick={()=>setEditRow(set=> !set)}> {editRow ? "Close" : "Edit"} </Button>
-          <Button onClick={() => deleteCabin(cabinId)}>
-            {isDeleting ? "Deleting..." : "Delete"}
+          <Button
+            disabled={isCreating}
+            onClick={handleDuplicate}
+            title="duplicate"
+          >
+            <FaCopy />
+          </Button>
+          <Button onClick={() => setEditRow((set) => !set)} title="edit">
+            {editRow ? "Close" : <FaPen />}
+          </Button>
+          <Button
+            disabled={isDeleting}
+            onClick={() => deleteCabin(cabinId)}
+            title="delete"
+          >
+            {isDeleting ? "Deleting..." : <FaTrash />}
           </Button>
         </ButtonContainer>
       </TableRow>
-      {editRow &&<CreateCabinForm cabinToEdit={cabin} />}
+      {editRow && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }

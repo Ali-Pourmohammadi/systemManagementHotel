@@ -20,7 +20,6 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     defaultValues: isEditSession ? editValues : {},
   });
 
-  const queryClient = useQueryClient();
   const { errors } = formState;
   //create cabin mutation
   const { isCreating, createCabin } = useCreateCabin();
