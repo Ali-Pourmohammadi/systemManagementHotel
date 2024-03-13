@@ -1,5 +1,10 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import styled from "styled-components";
-
+import { HiX } from "react-icons/hi";
+import { createPortal } from "react-dom";
+import { cloneElement, createContext, useContext, useEffect, useRef, useState } from "react";
+import useOutside from "../features/cabins/useOutsideClick";
 const StyledModal = styled.div`
   position: fixed;
   top: 50%;
@@ -48,3 +53,36 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+// step 1
+const ModalContext = createContext();
+
+export default function Modal({children}){
+const [openName , setOpenName] = useState("");
+const close = ()=> setOpenName("");
+return <ModalContext.Provider value={{close , setOpenName , openName}}>{children}</ModalContext.Provider>
+}
+function Open({ children, opens: openWindowName }) {
+  const { setOpenName } = useContext(ModalContext);
+  return cloneElement(children, { onClick: () => setOpenName(openWindowName) });
+}
+
+function Window({ children,name }) {
+  const {openName , close }  = useContext(ModalContext);
+  const {ref} = useOutside(close)
+  if(name !== openName) return null;
+  return createPortal(
+    <Overlay>
+      <StyledModal ref={ref}>
+        <Button onClick={close}>
+          <HiX />
+        </Button>
+        <div>{cloneElement(children,{onCloseModal:close})}</div>
+      </StyledModal>
+    </Overlay>,
+    document.body
+  );
+}
+Modal.Open = Open;
+Modal.Window = Window;
+export {ModalContext}

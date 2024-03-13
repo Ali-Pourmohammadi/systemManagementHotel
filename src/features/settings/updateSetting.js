@@ -14,5 +14,5 @@ export default function useUpdateSetting(){
     })
 
 
-    return {updating , updateSetting} ; 
+return {updating , updateSetting};
 }
