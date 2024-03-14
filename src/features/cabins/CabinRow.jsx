@@ -11,6 +11,8 @@ import useDelete from "./DeleteCabin";
 import useDeleteCabin from "./DeleteCabin";
 import useCreateCabin from "./createCabin";
 import { FaCopy, FaPen, FaTrash } from "react-icons/fa6";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import Modal from "../../ui/Modal";
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -94,19 +96,34 @@ export default function CabinRow({ cabin }) {
           >
             <FaCopy />
           </Button>
-          <Button onClick={() => setEditRow((set) => !set)} title="edit">
-            {editRow ? "Close" : <FaPen />}
-          </Button>
-          <Button
-            disabled={isDeleting}
-            onClick={() => deleteCabin(cabinId)}
-            title="delete"
-          >
-            {isDeleting ? "Deleting..." : <FaTrash />}
-          </Button>
+          <Modal>
+            <Modal.Open opens="cabins-edit">
+              <Button onClick={() => setEditRow((set) => !set)} title="edit">
+                {editRow ? "Close" : <FaPen />}
+              </Button>
+            </Modal.Open>
+            <Modal.Window name="cabins-edit">
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
+
+            {/* delete */}
+            <Modal.Open opens="confirm-delete">
+              <Button disabled={isDeleting} title="delete">
+                {isDeleting ? "Deleting..." : <FaTrash />}
+              </Button>
+            </Modal.Open>
+
+            <Modal.Window name="confirm-delete">
+              <ConfirmDelete
+                resourceName="cabins"
+                onConfirm={() => deleteCabin(cabinId)}
+                disabled={isDeleting}
+                
+              />
+            </Modal.Window>
+          </Modal>
         </ButtonContainer>
       </TableRow>
-      {editRow && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }

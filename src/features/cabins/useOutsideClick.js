@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
-import { ModalContext } from "../../ui/Modal";
+import { useEffect, useRef } from "react";
 
 export default function useOutside(handler){
     const ref = useRef();
