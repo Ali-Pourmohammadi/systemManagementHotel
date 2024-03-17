@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-key */
 /* eslint-disable no-unexpected-multiline */
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +9,7 @@ import CabinRow from "./CabinRow";
 import useGetCabins from "./getCabins";
 import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
+import { useSearchParams } from "react-router-dom";
 // const Table = styled.div`
 //   border: 1px solid var(--color-grey-200);
 
@@ -34,27 +36,33 @@ const TableHeader = styled.header`
 `;
 export default function CabinTable() {
   const { cabins, isLoading } = useGetCabins();
+  let filterCabins = cabins;
+  const [searchParams] = useSearchParams();
+  const filterValue = searchParams.get("discount") || "all";
+  if (filterValue === "all") filterCabins;
+  if (filterValue === "no-discount")
+    filterCabins = filterCabins.filter((cabin) => cabin.discount === 0);
+  if (filterValue === "discount")
+    filterCabins = filterCabins.filter((cabin) => cabin.discount > 0);
+
   if (isLoading) return <Spinner />;
   // if()
   return (
     <Menus>
-      
-    <Table columns=" 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
-      <Table.Header>
-        <div></div>
-        <div>Cabin</div>
-        <div>Capacity</div>
-        <div>Price</div>
-        <div>Discount</div>
-        <div></div>
-      </Table.Header>
-      <Table.Body data = {cabins} render = { ((cabin) => (
-        <CabinRow cabin={cabin} key={cabin.id} />
-        ))}>
-
-      </Table.Body>
-     
-    </Table>
-        </Menus>
+      <Table columns=" 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
+        <Table.Header>
+          <div></div>
+          <div>Cabin</div>
+          <div>Capacity</div>
+          <div>Price</div>
+          <div>Discount</div>
+          <div></div>
+        </Table.Header>
+        <Table.Body
+          data={filterCabins}
+          render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
+        ></Table.Body>
+      </Table>
+    </Menus>
   );
 }
