@@ -6,15 +6,17 @@ import { getCabins } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
 import useGetCabins from "./getCabins";
-const Table = styled.div`
-  border: 1px solid var(--color-grey-200);
+import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
+// const Table = styled.div`
+//   border: 1px solid var(--color-grey-200);
 
-  font-size: 1.4rem;
-  background-color: var(--color-grey-0);
-  border-radius: 7px;
-  width: 100%;
-  overflow: hidden;
-`;
+//   font-size: 1.4rem;
+//   background-color: var(--color-grey-0);
+//   border-radius: 7px;
+//   width: 100%;
+//   overflow: hidden;
+// `;
 
 const TableHeader = styled.header`
   display: grid;
@@ -31,22 +33,28 @@ const TableHeader = styled.header`
   padding: 1.6rem 2.4rem;
 `;
 export default function CabinTable() {
-  const {cabins , isLoading} = useGetCabins();
+  const { cabins, isLoading } = useGetCabins();
   if (isLoading) return <Spinner />;
   // if()
   return (
-    <Table role="table">
-      <TableHeader role="row">
+    <Menus>
+      
+    <Table columns=" 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
+      <Table.Header>
         <div></div>
         <div>Cabin</div>
         <div>Capacity</div>
         <div>Price</div>
         <div>Discount</div>
         <div></div>
-      </TableHeader>
-      {cabins.map((cabin) => (
+      </Table.Header>
+      <Table.Body data = {cabins} render = { ((cabin) => (
         <CabinRow cabin={cabin} key={cabin.id} />
-      ))}
+        ))}>
+
+      </Table.Body>
+     
     </Table>
+        </Menus>
   );
 }

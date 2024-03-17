@@ -2,17 +2,14 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import Button from "../../ui/Button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
-import useDelete from "./DeleteCabin";
 import useDeleteCabin from "./DeleteCabin";
 import useCreateCabin from "./createCabin";
 import { FaCopy, FaPen, FaTrash } from "react-icons/fa6";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Modal from "../../ui/Modal";
+import Menus from "../../ui/Menus";
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -26,10 +23,6 @@ const TableRow = styled.div`
   }
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 0 0.5rem;
-`;
 const Img = styled.img`
   display: block;
   width: 6.4rem;
@@ -88,41 +81,39 @@ export default function CabinRow({ cabin }) {
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{`${discount ? formatCurrency(discount) : `__`}`}</Discount>
-        <ButtonContainer>
-          <Button
-            disabled={isCreating}
-            onClick={handleDuplicate}
-            title="duplicate"
-          >
-            <FaCopy />
-          </Button>
-          <Modal>
-            <Modal.Open opens="cabins-edit">
-              <Button onClick={() => setEditRow((set) => !set)} title="edit">
-                {editRow ? "Close" : <FaPen />}
-              </Button>
-            </Modal.Open>
-            <Modal.Window name="cabins-edit">
-              <CreateCabinForm cabinToEdit={cabin} />
-            </Modal.Window>
+        <Modal>
 
-            {/* delete */}
-            <Modal.Open opens="confirm-delete">
-              <Button disabled={isDeleting} title="delete">
-                {isDeleting ? "Deleting..." : <FaTrash />}
-              </Button>
-            </Modal.Open>
+        <Menus.Menu>
+          <Menus.Toggle id={cabinId} />
+          <Menus.List id={cabinId}>
+            <Menus.Button onClick={handleDuplicate} icon={<FaCopy />}>
+              Duplicate
+            </Menus.Button>
+            
+          <Modal.Open opens="cabins-edit">
+          <Menus.Button icon={<FaPen/>}>Edit</Menus.Button>
+          </Modal.Open>
+          <Modal.Open opens="confirm-delete">
+          <Menus.Button icon={<FaTrash/>}>Delete</Menus.Button>
+          </Modal.Open>
+          </Menus.List>
+        </Menus.Menu>
 
-            <Modal.Window name="confirm-delete">
-              <ConfirmDelete
-                resourceName="cabins"
-                onConfirm={() => deleteCabin(cabinId)}
-                disabled={isDeleting}
-                
-              />
-            </Modal.Window>
-          </Modal>
-        </ButtonContainer>
+          <Modal.Window name="cabins-edit">
+            <CreateCabinForm cabinToEdit={cabin} />
+          </Modal.Window>
+
+          {/* delete */}
+    
+
+          <Modal.Window name="confirm-delete">
+            <ConfirmDelete
+              resourceName="cabins"
+              onConfirm={() => deleteCabin(cabinId)}
+              disabled={isDeleting}
+            />
+          </Modal.Window>
+        </Modal>
       </TableRow>
     </>
   );
