@@ -36,16 +36,24 @@ const TableHeader = styled.header`
 `;
 export default function CabinTable() {
   const { cabins, isLoading } = useGetCabins();
-  let filterCabins = cabins;
   const [searchParams] = useSearchParams();
-  const filterValue = searchParams.get("discount") || "all";
-  if (filterValue === "all") filterCabins;
-  if (filterValue === "no-discount")
-    filterCabins = filterCabins.filter((cabin) => cabin.discount === 0);
-  if (filterValue === "discount")
-    filterCabins = filterCabins.filter((cabin) => cabin.discount > 0);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading || !cabins) return <Spinner />;
+
+  // filter cabins
+  let filterCabins;
+  const filterValue = searchParams.get("discount") || "all";
+  if (filterValue === "all") filterCabins = cabins;
+  if (filterValue === "no-discount")
+    filterCabins = cabins.filter((cabin) => cabin.discount === 0);
+  if (filterValue === "discount")
+    filterCabins = cabins.filter((cabin) => cabin.discount > 0);
+  // sort cabins
+  const sortBy = searchParams.get("sortBy") || "startDate-asc";
+  const [filed, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 :-1;
+  const sortCabins = filterCabins.sort((a, b) => (a[filed] - b[filed])*modifier);
+
   // if()
   return (
     <Menus>
