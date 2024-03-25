@@ -38,7 +38,7 @@ export default function CabinTable() {
   const { cabins, isLoading } = useGetCabins();
   const [searchParams] = useSearchParams();
 
-  if (isLoading || !cabins) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   // filter cabins
   let filterCabins;
@@ -51,8 +51,10 @@ export default function CabinTable() {
   // sort cabins
   const sortBy = searchParams.get("sortBy") || "startDate-asc";
   const [filed, direction] = sortBy.split("-");
-  const modifier = direction === "asc" ? 1 :-1;
-  const sortCabins = filterCabins.sort((a, b) => (a[filed] - b[filed])*modifier);
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortCabins = filterCabins.sort(
+    (a, b) => (a[filed] - b[filed]) * modifier
+  );
 
   // if()
   return (
