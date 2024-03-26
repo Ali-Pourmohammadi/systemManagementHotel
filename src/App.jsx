@@ -4,6 +4,7 @@ import Account from "./pages/Account";
 import Cabins from "./pages/Cabins";
 import Login from "./pages/Login";
 import Bookings from "./pages/Bookings";
+import Booking from "./pages/Booking"
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
 import PageNotFound from "./pages/PageNotFound";
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="account" element={<Account />} />
             <Route path="cabins" element={<Cabins />} />
+            <Route path="bookings/:bookingId" element = {<Booking/>}/>
             <Route path="users" element={<Users />} />
             <Route path="bookings" element={<Bookings />} />
             <Route path="settings" element={<Settings />} />
