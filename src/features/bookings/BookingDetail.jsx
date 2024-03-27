@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import styled from "styled-components";
 
@@ -12,6 +13,7 @@ import ButtonText from "../../ui/ButtonText";
 import { useMoveBack } from "../../hooks/useMoveBack";
 import { useBooking } from "./useBooking";
 import Spinner from "../../ui/Spinner";
+import { useParams } from "react-router-dom";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -20,18 +22,16 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
-  const { bookingId, booking, isLoading } = useBooking();
-  if (isLoading) return <Spinner />;
-  // const booking = {};
-  const status = "checked-in";
+  const { booking, isLoading } = useBooking(); // Pass bookingId to useBooking
 
   const moveBack = useMoveBack();
-
   const statusToTagName = {
     unconfirmed: "blue",
     "checked-in": "green",
     "checked-out": "silver",
   };
+  if (isLoading || !booking) return <Spinner />;
+  const { status, id: bookingId } = booking;
 
   return (
     <>
