@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { currentUser } from "../../services/apiUser";
+import { getCurrentUser } from "../../services/apiUser";
 
 export function useUser(){
     const {data : user , isLoading , error} = useQuery({
         queryKey:["user"],
-        queryFn : currentUser,
+        queryFn : getCurrentUser,
         retry:false
     })
     return {user , isLoading   , isAuth :user?.role === "authenticated"}

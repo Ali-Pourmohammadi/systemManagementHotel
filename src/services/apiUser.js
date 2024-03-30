@@ -16,25 +16,25 @@ export  async function login({email,password}){
 
 
 // get current user
-export async function currentUser(){
-  try {
-      const { data: session } = await supabase.auth.getSession();
-      if (!session) return null; // No active session, return null or appropriate default value
+export async function getCurrentUser() {
+  const { data: session } = await supabase.auth.getSession();
+  if (!session.session) return null;
 
-      const { data, error } = await supabase.auth.getUser();
-      if (error) {
-          throw new Error(error.message);
-      }
-      return data.user; // Return user data or appropriate default value
-  } catch (error) {
-      // Handle token-related errors, such as token missing or invalid
-      console.error("Error fetching current user:", error);
-   
-      throw error; // Rethrow the error to let the caller handle it
-  }
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) throw new Error(error.message);
+  return data?.user;
 }
+
 // sign out 
 export async function logout(){
 const {error} =  await supabase.auth.signOut();
 if(error) throw new Error(error.message);
+}
+
+// sign up user
+export async function signup({ email, password, fullName }) {
+  const { data, error } = await supabase.auth.signUp({ email, password }, { data: { fullName, avatar: "" } });
+  if (error) throw new Error(error.message);
+  return data;
 }

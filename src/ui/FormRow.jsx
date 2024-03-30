@@ -46,4 +46,4 @@ function FormRow({ label, errors, children }) {
     </StyledFormRow>
   );
 }
-export {FormRow}
+export { FormRow };
