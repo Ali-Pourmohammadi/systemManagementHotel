@@ -33,3 +33,8 @@ export async function currentUser(){
       throw error; // Rethrow the error to let the caller handle it
   }
 }
+// sign out 
+export async function logout(){
+const {error} =  await supabase.auth.signOut();
+if(error) throw new Error(error.message);
+}
