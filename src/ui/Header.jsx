@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Logout } from "../features/authentication/Logout";
+import HeaderMenu from "./HeaderMenu";
 
 const StyledHeader = styled.header`
   background: #ffffff;
@@ -10,7 +10,7 @@ const StyledHeader = styled.header`
 export default function Header() {
   return (
     <StyledHeader>
-      <Logout />
+      <HeaderMenu />
     </StyledHeader>
   );
 }

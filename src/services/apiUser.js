@@ -33,8 +33,19 @@ if(error) throw new Error(error.message);
 }
 
 // sign up user
-export async function signup({ email, password, fullName }) {
-  const { data, error } = await supabase.auth.signUp({ email, password }, { data: { fullName, avatar: "" } });
+export async function signup({ fullName, email, password }) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        fullName,
+        avatar: "",
+      },
+    },
+  });
+
   if (error) throw new Error(error.message);
+
   return data;
 }
